@@ -1,0 +1,13 @@
+{% extends "pilot/base.html" %}{% block title %}Inbox · InboxPilot{% endblock %}
+{% block content %}
+<h1>Inbox</h1>
+<p class="sub"><a href="?">All</a>{% for v, l in states %} · <a href="?state={{ v }}"{% if state == v %} style="color:var(--fg)"{% endif %}>{{ l }}</a>{% endfor %}</p>
+<div class="card" style="overflow-x:auto"><table>
+<tr><th>#</th><th>Channel</th><th>From</th><th>Message</th><th>Intent</th><th>State</th></tr>
+{% for m in items %}<tr>
+<td><a href="{% url 'message' m.pk %}">{{ m.pk }}</a></td><td>{{ m.get_channel_display }}</td><td>{{ m.sender }}</td>
+<td>{% if m.flagged_injection %}<span class="flag" title="Injection attempt removed">!</span> {% endif %}{{ m.body|truncatechars:80 }}</td>
+<td>{{ m.intent }}</td><td><span class="pill s-{{ m.state }}">{{ m.get_state_display }}</span></td></tr>
+{% empty %}<tr><td colspan="6" class="muted">No messages.</td></tr>{% endfor %}
+</table></div>
+{% endblock %}

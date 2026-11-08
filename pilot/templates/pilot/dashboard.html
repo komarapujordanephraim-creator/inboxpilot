@@ -1,0 +1,20 @@
+{% extends "pilot/base.html" %}
+{% block content %}
+<h1>Dashboard</h1>
+<p class="sub">Messages from WhatsApp, email and web chat are sorted, answered when safe, and sent to you when a person must decide.</p>
+<div class="grid g4">
+  <div class="card kpi"><b>{{ total }}</b><small>Messages</small></div>
+  <div class="card kpi"><b style="color:var(--ok)">{{ auto_pct }}%</b><small>Handled automatically</small></div>
+  <div class="card kpi"><b style="color:var(--warn)">{{ pending }}</b><small><a href="{% url 'inbox' %}?state=approval">Waiting for approval</a></small></div>
+  <div class="card kpi"><b style="color:var(--bad)">{{ flagged }}</b><small>Injection attempts blocked</small></div>
+</div>
+<div class="grid g2" style="margin-top:14px">
+  <div class="card"><h3 style="margin-top:0">Messages by intent</h3>
+    <div class="bars">{% for r in by_intent %}<div><span>{{ r.intent }}</span><span class="b" style="width:{% widthratio r.n max_intent 100 %}%"></span><span>{{ r.n }}</span></div>{% empty %}<p class="muted">No messages yet.</p>{% endfor %}</div>
+    <p class="muted" style="margin-bottom:0">{{ leads }} lead{{ leads|pluralize }} captured.</p>
+  </div>
+  <div class="card"><h3 style="margin-top:0">Recent activity</h3>
+    <table>{% for e in recent %}<tr><td class="muted" style="white-space:nowrap">{{ e.at|time:"H:i" }}</td><td><b>{{ e.actor }}</b> {{ e.event }}{% if e.message %} · <a href="{% url 'message' e.message.pk %}">#{{ e.message.pk }}</a>{% endif %}<div class="muted" style="font-size:13px">{{ e.detail|truncatechars:90 }}</div></td></tr>{% empty %}<tr><td class="muted">Nothing yet. Try <a href="{% url 'simulate' %}">Simulate message</a>.</td></tr>{% endfor %}</table>
+  </div>
+</div>
+{% endblock %}

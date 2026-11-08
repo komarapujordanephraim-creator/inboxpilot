@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}InboxPilot{% endblock %}</title>
+<style>
+:root{--bg:#07090e;--panel:#0f1520;--panel2:#141c2a;--line:#232d3e;--fg:#eef2f8;--mute:#9aa4b6;--cy:#7de3ff;--cu:#ff9a5c;--ok:#5be3a1;--warn:#ffd36e;--bad:#ff5c7a;--uv:#a58bff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 "Segoe UI",system-ui,-apple-system,sans-serif}
+a{color:var(--cy);text-decoration:none}a:hover{text-decoration:underline}
+header{position:sticky;top:0;z-index:5;background:rgba(7,9,14,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar{max-width:1180px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.brand{font-weight:800;letter-spacing:.04em;display:flex;align-items:center;gap:10px;color:var(--fg)}
+.brand i{width:12px;height:12px;border-radius:3px;background:linear-gradient(135deg,var(--cy),var(--cu));transform:rotate(45deg)}
+nav{display:flex;gap:16px;flex-wrap:wrap}nav a{color:var(--mute)}nav a.on{color:var(--fg)}
+.sp{margin-left:auto;color:var(--mute);font-size:13px}
+main{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+h1{font-size:28px;margin:0 0 6px;letter-spacing:-.01em}.sub{color:var(--mute);margin:0 0 24px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+.grid{display:grid;gap:14px}.g4{grid-template-columns:repeat(4,1fr)}.g2{grid-template-columns:1.2fr 1fr;align-items:start}
+@media (max-width:860px){.g4{grid-template-columns:repeat(2,1fr)}.g2{grid-template-columns:1fr}}
+.kpi b{display:block;font-size:30px}.kpi small{color:var(--mute);text-transform:uppercase;letter-spacing:.1em;font-size:11px}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mute);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+.pill{display:inline-block;font-size:12px;padding:2px 9px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);white-space:nowrap}
+.s-auto{color:var(--ok);border-color:rgba(91,227,161,.4)}.s-approval{color:var(--warn);border-color:rgba(255,211,110,.4)}
+.s-ignored{color:var(--mute)}.s-done{color:var(--cy)}.s-new{color:var(--uv)}
+.risk-high{color:var(--cu)}.risk-low{color:var(--ok)}.flag{color:var(--bad);font-weight:700}
+.btn{display:inline-block;border:1px solid var(--line);background:var(--panel2);color:var(--fg);padding:9px 16px;border-radius:10px;font:inherit;cursor:pointer}
+.btn.pri{background:linear-gradient(180deg,#fff,#dbe5f2);color:#07090e;border-color:#fff;font-weight:700}.btn.bad{color:var(--bad)}
+.msgs{list-style:none;padding:0;margin:0 0 18px}.msgs li{padding:10px 14px;border-radius:10px;margin-bottom:8px;background:var(--panel2);border:1px solid var(--line)}
+.msgs .success{border-color:rgba(91,227,161,.5)}.msgs .error{border-color:rgba(255,92,122,.6)}
+pre{white-space:pre-wrap;word-break:break-word;background:#0a0f17;border:1px solid var(--line);border-radius:10px;padding:12px;margin:0;font:13px/1.5 ui-monospace,Consolas,monospace}
+input,select,textarea{width:100%;background:#0a0f17;color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit}
+label{display:block;margin:12px 0 6px;color:var(--mute);font-size:13px}.helptext{color:var(--mute);font-size:12px}
+.bars div{display:grid;grid-template-columns:110px 1fr 34px;gap:10px;align-items:center;margin:8px 0;font-size:13px}
+.bars span.b{height:10px;border-radius:6px;background:linear-gradient(90deg,var(--cy),var(--uv))}
+.muted{color:var(--mute)}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="{% url 'dashboard' %}"><i></i>InboxPilot</a>
+  {% if user.is_authenticated %}
+  <nav>
+    <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}on{% endif %}">Dashboard</a>
+    <a href="{% url 'inbox' %}" class="{% if request.resolver_match.url_name == 'inbox' %}on{% endif %}">Inbox</a>
+    <a href="{% url 'inbox' %}?state=approval">Approvals</a>
+    <a href="{% url 'simulate' %}" class="{% if request.resolver_match.url_name == 'simulate' %}on{% endif %}">Simulate message</a>
+  </nav>
+  <span class="sp">{{ user.username }} · <form method="post" action="{% url 'logout' %}" style="display:inline">{% csrf_token %}<button class="btn" style="padding:4px 10px">Log out</button></form></span>
+  {% endif %}
+</div></header>
+<main>
+{% if messages %}<ul class="msgs">{% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}</ul>{% endif %}
+{% block content %}{% endblock %}
+</main>
+</body>
+</html>

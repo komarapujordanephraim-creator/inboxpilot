@@ -1,0 +1,7 @@
+{% extends "pilot/base.html" %}{% block title %}Sign in · InboxPilot{% endblock %}
+{% block content %}
+<div class="card" style="max-width:420px;margin:40px auto">
+  <h1>Sign in</h1><p class="sub">Staff only. Demo login after <code>seed_demo</code>: demo / demo12345</p>
+  <form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn pri">Sign in</button></form>
+</div>
+{% endblock %}
