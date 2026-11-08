@@ -1,5 +1,7 @@
 # InboxPilot
 
+**Live demo (runs in your browser, nothing is sent):** https://komarapujordanephraim-creator.github.io/inboxpilot-demo.html
+
 An AI-automation demo for customer messages. Messages from WhatsApp, email and web chat are **sorted, answered when it is safe, and sent to a person when it is not**. Refunds never move money without a human approval, every step is written to an audit trail, and instructions hidden inside customer messages are removed before any decision is made.
 
 Django 5, no external services. Portfolio project with fictional demo data.
